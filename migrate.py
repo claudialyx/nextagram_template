@@ -18,3 +18,4 @@ if os.getenv('FLASK_ENV') == 'production':
 else:
     db.evolve(ignore_tables={'base_model'})
 print("Finish Migration")
+
