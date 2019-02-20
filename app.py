@@ -1,7 +1,9 @@
 import os
 import config
-from flask import Flask
-from models.base_model import db
+from flask import Flask, render_template, request, redirect, url_for
+from models.base_model import *
+from models.user import *
+from werkzeug.security import generate_password_hash
 
 web_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'instagram_web')
@@ -23,3 +25,33 @@ def before_request():
 def after_request(response):
     db.close()
     return response
+
+@app.route("/")
+def homepage():
+    return render_template('home.html')
+
+@app.route("/users/sign_in")
+def sign_in():
+    return render_template('signin.html')
+
+@app.route("/users/new")
+def new_user():
+    return render_template('signup.html')
+
+@app.route("/users/", methods=["POST"])
+def create_user():
+    message = []
+    user_username = request.form['username_up']
+    user_email = request.form['email_up']
+    user_password = request.form['password_up']
+    hashed_password = generate_password_hash(user_password) 
+    new_user = User(username=user_username,email=user_email,password=hashed_password)
+    
+    if new_user.save():
+        breakpoint()
+        message.append("Successfully signed up! You may proceed to sign in now.")
+        return redirect(url_for('new_user', message=message))
+    else:
+        return render_template('signup.html', errors=new_user.errors)
+    
+    return render_template('signup.html')
