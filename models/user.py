@@ -13,5 +13,5 @@ class User(BaseModel):
 
         if duplicate_users:
             self.errors.append('Username not unique. Please choose another username.')
-        elif duplicate_email:
+        if duplicate_email:
             self.errors.append('This email address has been used.')

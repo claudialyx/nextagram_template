@@ -6,9 +6,11 @@
 {% block content %}
 <div class="mx-3">
     <h1>Sign up to join the community!</h1>
-    {% if message %}
+    {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
     <div class="alert alert-success" role="alert">{{message}}</div>
-    {% endif %}
+    {% endfor %}
+    {% endwith %}
     {% if errors %}
     {% for error in errors %}
     <div class="alert alert-danger" role="alert">{{error}}</div>
