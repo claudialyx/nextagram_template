@@ -37,8 +37,12 @@
         </form>
         {% if current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="#"> <img src="../static/user.png" width="28" height="28"
+          <a class="nav-link" href="#"><img src="../static/user.png" width="28" height="28"
               class="d-inline-block align-top" />{{current_user.username}} </a>
+        </li>
+        <li class=" nav-item">
+          <a class="nav-link" href="/user/edit"><img src="../static/user.png" width="28" height="28"
+              class="d-inline-block align-top" />Settings</a>
         </li>
         <li class=" nav-item">
           <a class="nav-link" href="/user/sign_out">Sign Out</a>

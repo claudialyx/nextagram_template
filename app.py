@@ -34,12 +34,10 @@ def after_request(response):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
 def internal_server_error(e):
-    # note that we set the 404 status explicitly
     return render_template('500.html'), 500
 
 @login_manager.user_loader
@@ -69,7 +67,7 @@ def sign_in():
             if result:
                 # session["user_id"] = user.id # tells the browser to store `user.id` in session with the key as `user_id`
                 login_user(user)
-                flash("The current user is" + current_user.username)
+                # flash("The current user is" + current_user.username)
                 return redirect(url_for('index'))
             else: 
                 flash("Please ensure username and password are correct")
@@ -108,9 +106,36 @@ def create_user():
     
     if new_user.save():
         flash("Successfully signed up!")
+        login_user(new_user)
         return redirect(url_for('index'))
     else:
-        breakpoint()
         return render_template('signup.html', errors=new_user.errors)
     
     return render_template('signup.html')
+
+@app.route("/user/edit", methods=["GET","POST"])
+@login_required
+def edit_user():
+    user = User.get_by_id(current_user.id)
+
+    if request.method =="POST":
+        user_username = request.form['username_edit']
+        user_email = request.form['email_edit']
+        user_password = request.form['password_edit']
+
+        if current_user == user:
+            if user_username:
+                u = User.update(username=user_username).where(User.id == user)
+            if user_email:
+                e = User.update(email=user_email).where(User.id == user)
+            if user_password:
+                hashed_password = generate_password_hash(user_password) 
+                p = User.update(password=hashed_password).where(User.id == user)
+
+            if u.execute() and e.execute() and p.execute():
+                flash("Successfully updated")
+                return redirect(url_for('edit_user'))
+            else:
+                return render_template('settings.html')   
+                
+    return render_template('settings.html')
