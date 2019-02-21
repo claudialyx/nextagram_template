@@ -80,7 +80,9 @@ def update(id):
             if user_email:
                 q = User.update(email=user_email).where(User.id == user)
             if user_new_password:
-                if user_old_password == current_user.password and user_new_password == user_confirm_new_password:
+                # if user_old_password == current_user.password and user_new_password == user_confirm_new_password:
+                breakpoint()
+                if check_password_hash(current_user.password,user_old_password) and user_new_password == user_confirm_new_password:
                     hashed_password = generate_password_hash(user_new_password) 
                     q = User.update(password=hashed_password).where(User.id == user)
                 else: 

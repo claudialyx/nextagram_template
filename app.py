@@ -13,8 +13,6 @@ web_dir = os.path.join(os.path.dirname(
 
 app = Flask('NEXTAGRAM', root_path=web_dir)
 csrf = CSRFProtect(app)
-# login_manager = LoginManager()
-# login_manager.init_app(app)
 
 if os.getenv('FLASK_ENV') == 'production':
     app.config.from_object("config.ProductionConfig")
