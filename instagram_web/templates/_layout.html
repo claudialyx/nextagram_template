@@ -31,26 +31,27 @@
 
     <div class="nav justify-content-end">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Users </a>
-        </li>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Type Username">
+          <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        </form>
         {% if current_user.is_authenticated %}
         <li class="nav-item">
+          <a class="nav-link" href="#"> <img src="../static/user.png" width="28" height="28"
+              class="d-inline-block align-top" />{{current_user.username}} </a>
+        </li>
+        <li class=" nav-item">
           <a class="nav-link" href="/user/sign_out">Sign Out</a>
         </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="/user/sign_in">Sign In</a>
         </li>
-        {% endif%}
         <li class="nav-item">
           <a class="nav-link" href="/users/new">Sign Up</a>
         </li>
+        {% endif%}
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Type Username">
-        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
-      </form>
     </div>
   </nav>
 
