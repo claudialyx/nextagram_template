@@ -22,7 +22,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <a class="navbar-brand" href="/">
-      <img src="../static/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" /> Nextagram
+      <img src="/static/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" /> Nextagram
     </a>
     <button class=" navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
       aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,28 +37,28 @@
         </form>
         {% if current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="#"><img src="../static/user.png" width="28" height="28"
+          <a class="nav-link" href="#"><img src="/static/images/user.png" width="28" height="28"
               class="d-inline-block align-top" />{{current_user.username}} </a>
         </li>
         <li class="dropdown">
-          <a class="dropdown-toggle nav-link" data-toggle="dropdown"><img src="../static/user.png" width="28"
+          <a class="dropdown-toggle nav-link" data-toggle="dropdown"><img src="/static/images/settings.png" width="28"
               height="28" class="d-inline-block align-top" />Settings</a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" href="#">Upload Profile Image</a>
-            <a class="dropdown-item" href="/user/edit">Edit profile</a>
+            <a class="dropdown-item" href="{{url_for('users.edit', id=current_user.id)}}">Edit profile</a>
             <a class="dropdown-item" href="#">Privacy Policy</a>
             <a class="dropdown-item" href="#">Delete account</a>
           </div>
         </li>
         <li class=" nav-item">
-          <a class="nav-link" href="/user/sign_out">Sign Out</a>
+          <a class="nav-link" href="{{url_for('sessions.sign_out')}}">Sign Out</a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="/user/sign_in">Sign In</a>
+          <a class="nav-link" href="{{url_for('sessions.sign_in')}}">Sign In</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/users/new">Sign Up</a>
+          <a class="nav-link" href="{{url_for('users.new')}}">Sign Up</a>
         </li>
         {% endif%}
       </ul>
