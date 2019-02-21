@@ -40,9 +40,15 @@
           <a class="nav-link" href="#"><img src="../static/user.png" width="28" height="28"
               class="d-inline-block align-top" />{{current_user.username}} </a>
         </li>
-        <li class=" nav-item">
-          <a class="nav-link" href="/user/edit"><img src="../static/user.png" width="28" height="28"
-              class="d-inline-block align-top" />Settings</a>
+        <li class="dropdown">
+          <a class="dropdown-toggle nav-link" data-toggle="dropdown"><img src="../static/user.png" width="28"
+              height="28" class="d-inline-block align-top" />Settings</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">Upload Profile Image</a>
+            <a class="dropdown-item" href="/user/edit">Edit profile</a>
+            <a class="dropdown-item" href="#">Privacy Policy</a>
+            <a class="dropdown-item" href="#">Delete account</a>
+          </div>
         </li>
         <li class=" nav-item">
           <a class="nav-link" href="/user/sign_out">Sign Out</a>

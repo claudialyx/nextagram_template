@@ -56,6 +56,8 @@ def index_user():
 
 @app.route("/user/sign_in", methods=['GET','POST'])
 def sign_in():
+    if current_user.is_authenticated:
+        return render_template('home.html')
     if request.method == "POST":
         username_to_check = request.form['username_in']
         password_to_check = request.form['password_in']
@@ -88,10 +90,12 @@ def sign_out():
 
 @app.route("/users/new")
 def new_user():
+    if current_user.is_authenticated:
+        return render_template('home.html')
     return render_template('signup.html')
 
 @app.route("/users/", methods=["POST"])
-def create_user():
+def create_user():   
     user_username = request.form['username_up']
     user_email = request.form['email_up']
     user_password = request.form['password_up']
@@ -119,23 +123,30 @@ def edit_user():
     user = User.get_by_id(current_user.id)
 
     if request.method =="POST":
-        user_username = request.form['username_edit']
-        user_email = request.form['email_edit']
-        user_password = request.form['password_edit']
+        user_username = request.form.get('username_edit')
+        user_email = request.form.get('email_edit')
+        user_old_password = request.form.get('old_password')
+        user_new_password = request.form.get('new_password')
+        user_confirm_new_password = request.form.get('confirm_password')
 
         if current_user == user:
             if user_username:
-                u = User.update(username=user_username).where(User.id == user)
+                q = User.update(username=user_username).where(User.id == user)
             if user_email:
-                e = User.update(email=user_email).where(User.id == user)
-            if user_password:
-                hashed_password = generate_password_hash(user_password) 
-                p = User.update(password=hashed_password).where(User.id == user)
+                q = User.update(email=user_email).where(User.id == user)
+            if user_new_password:
+                if user_old_password == current_user.password and user_new_password == user_confirm_new_password:
+                    hashed_password = generate_password_hash(user_new_password) 
+                    q = User.update(password=hashed_password).where(User.id == user)
+                else: 
+                    flash("Please ensure that your old password is correct and reconfirm your new passwords")
+                    return render_template('settings.html')   
 
-            if u.execute() and e.execute() and p.execute():
-                flash("Successfully updated")
-                return redirect(url_for('edit_user'))
-            else:
-                return render_template('settings.html')   
+            q.execute()
+            flash("Successfully updated")
+            return redirect(url_for('edit_user'))
+
+        else:
+            return render_template('settings.html')   
                 
     return render_template('settings.html')
