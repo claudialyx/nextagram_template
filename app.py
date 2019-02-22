@@ -4,7 +4,6 @@ import re
 import config
 from flask import Flask, render_template, request, redirect, url_for, flash, session,escape
 from models.base_model import *
-from models.user import *
 from flask_login import LoginManager, current_user,login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 

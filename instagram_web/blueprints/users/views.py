@@ -14,7 +14,6 @@ users_blueprint = Blueprint('users',
                             __name__,
                             template_folder='templates/users')
 
-
 @users_blueprint.route('/new', methods=['GET'])
 def new():
     if current_user.is_authenticated:
@@ -59,7 +58,7 @@ def index():
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 @login_required
 def edit(id):
-    return render_template('settings.html')
+    return render_template('edit_profile.html')
 
 
 @users_blueprint.route('/<id>', methods=['POST'])
@@ -80,18 +79,20 @@ def update(id):
             if user_email:
                 q = User.update(email=user_email).where(User.id == user)
             if user_new_password:
-                # if user_old_password == current_user.password and user_new_password == user_confirm_new_password:
-                breakpoint()
-                if check_password_hash(current_user.password,user_old_password) and user_new_password == user_confirm_new_password:
-                    hashed_password = generate_password_hash(user_new_password) 
-                    q = User.update(password=hashed_password).where(User.id == user)
-                else: 
-                    flash("Please ensure that your old password is correct and reconfirm your new passwords")
-                    return render_template('settings.html')   
+                if re.match(r'[A-Za-z0-9@#$%^&+=]{6,}', user_new_password):
+                    if check_password_hash(current_user.password,user_old_password) and user_new_password == user_confirm_new_password:
+                        hashed_password = generate_password_hash(user_new_password) 
+                        q = User.update(password=hashed_password).where(User.id == user)
+                    else: 
+                        flash("Please ensure that your old password is correct and reconfirm your new passwords")
+                        return render_template('edit_profile.html')
+                else:   
+                    flash ("Password must be at least 6 characters long")
+                    return render_template('edit_profile.html')
 
             q.execute()
             flash("Successfully updated")
             return redirect(url_for('users.edit', id=current_user.id))
         else:
-            return render_template('settings.html')
-    return render_template('settings.html')
+            return render_template('edit_profile.html')
+    return render_template('edit_profile.html')

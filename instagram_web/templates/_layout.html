@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <nav class="navbar navbar-expand-lg justify-content-lg-between navbar-light bg-white">
     <a class="navbar-brand" href="/">
       <img src="/static/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" /> Nextagram
     </a>
@@ -29,22 +29,25 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="nav justify-content-end">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+    <div>
+      <ul class="navbar-nav">
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Type Username">
-          <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+          <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="Type Username">
+          <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
         </form>
+      </ul>
+    </div>
+    <div>
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         {% if current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="#"><img src="/static/images/user.png" width="28" height="28"
-              class="d-inline-block align-top" />{{current_user.username}} </a>
+          <a class="nav-link" href="#"><img src="/static/images/user.png" width="32" height="32"
+              class="d-inline-block align-center" />{{current_user.username}} </a>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle nav-link" data-toggle="dropdown"><img src="/static/images/settings.png" width="28"
               height="28" class="d-inline-block align-top" />Settings</a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#">Upload Profile Image</a>
             <a class="dropdown-item" href="{{url_for('users.edit', id=current_user.id)}}">Edit profile</a>
             <a class="dropdown-item" href="#">Privacy Policy</a>
             <a class="dropdown-item" href="#">Delete account</a>
