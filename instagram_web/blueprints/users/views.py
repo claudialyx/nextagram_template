@@ -47,12 +47,12 @@ def create():
 
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
-    pass
-
+    user = User.select().where(User.username == username)
+    return render_template('profile_page.html', user=user)
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    return "USERS"
+    return render_template('home.html')
 
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
@@ -60,6 +60,14 @@ def index():
 def edit(id):
     return render_template('edit_profile.html')
 
+@users_blueprint.route('/<id>/edit/account_privacy', methods=['GET'])
+@login_required
+def edit_account_privacy(id):
+    if request.form.get('account_privacy'):
+        a = User.update(privacy_status = True).where(User.id == current_user.id)
+        a.execute()
+        flash("Account privacy status updated")
+    return render_template('account_privacy.html')
 
 @users_blueprint.route('/<id>', methods=['POST'])
 @login_required

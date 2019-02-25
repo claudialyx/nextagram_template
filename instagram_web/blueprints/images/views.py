@@ -5,6 +5,7 @@ from app import app
 from helpers import *
 from models.base_model import BaseModel
 from models.user import User
+from models.image import Image
 import datetime
 
 images_blueprint = Blueprint('images',
@@ -18,24 +19,28 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# to create new post/upload images 
+def create_gallery_image(output):
+    gallery_pic = Image(user_id=current_user.id, image_name = output)
+    gallery_pic.save()
 
-# to display profic pic
-# @images_blueprint.route("/<id>")
-# def show_profile_pic():
-#     user = User.get_by_id(current_user.id)
-#     profilepic = user.profile_image_url
-#     return render_template('edit_profile.html', profilepic = profilepic, id=id)
-
+# to update profile image
+def update_profile_pic(output):
+    pic = User.update(profile_image_name = output).where(User.id == current_user.id)
+    pic.execute()
 
 # to send the file from the user’s computer directly to the bucket
-@images_blueprint.route("/", methods=["POST"])
-def upload_file():
+@images_blueprint.route("/<id>", methods=["POST"])
+def upload_file(id):
 	# A
-    if "user_file" not in request.files:
-        return "No user_file key in request.files"
+    if "user_file" not in request.files and "image_file" not in request.files:
+        return "No file in request.files"
 
 	# B If the key is in the object, we save it in a variable called file.
-    file    = request.files["user_file"]
+    if "user_file" in request.files:
+        file = request.files["user_file"]
+    if "image_file" in request.files:
+        file = request.files["image_file"]
     """
         These attributes are also available
         file.filename               # The actual name of the file
@@ -51,14 +56,17 @@ def upload_file():
 	# D. we check that there is a file and that it has an allowed filetype
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
-        output = upload_file_to_s3(file, S3_BUCKET)
-        pic = User.update(profile_image_path = output).where(User.id == current_user.id)
-        pic.execute()
-        return redirect(url_for("users.edit", id=id))
+        output = upload_file_to_s3(file, app.config['S3_BUCKET'])
+        if "user_file" in request.files:
+            update_profile_pic(output)
+            return redirect(url_for("users.edit", id=id))
+        if "image_file" in request.files:
+            create_gallery_image(output)
+            return redirect(url_for("users.show", username=current_user.username))
     else:
-        return redirect("/")
+        return redirect("/<id>")
 
-# user.profile_image_path # stored in database but returns just the path without domain
+# user.profile_image_name # stored in database but returns just the path without domain
 
 # function to upload a file to S3
 def upload_file_to_s3(file, bucket_name, acl="public-read"):

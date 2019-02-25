@@ -6,11 +6,11 @@ from app import app
 
 
 class User(BaseModel, UserMixin):
-    # id = pw.IntegerField(primary_key=True)
     username = pw.CharField(unique=True)
     email = pw.CharField(unique=True)
     password = pw.CharField(index=True)
-    profile_image_path = pw.CharField(null=True) 
+    profile_image_name = pw.CharField(null=True)
+    privacy_status = pw.BooleanField(default=False)
 
     def validate(self):
         duplicate_users = User.get_or_none(User.username == self.username)
@@ -23,4 +23,7 @@ class User(BaseModel, UserMixin):
 
     @hybrid_property
     def profile_image_url(self):
-        return app.config['S3_DOMAIN'] + self.profile_image_path    
+        if self.profile_image_name == None:
+            return "/static/images/placeholder.png"
+        else:
+            return app.config['S3_DOMAIN'] + self.profile_image_name    
