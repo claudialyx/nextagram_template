@@ -35,9 +35,11 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
+from models.user import User
 @app.route("/")
 def index():
     # if 'user_id' in session:
         # return redirect(url_for('index'))
-    return render_template('home.html')
+    users = User.select()
+    return render_template('home.html', users=users)
 

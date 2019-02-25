@@ -13,7 +13,7 @@ Account Privacy
 <div class="mx-3">
     <h2>Account Privacy</h2>
     <div class="custom-control custom-switch">
-        <form action="{{url_for('users.edit_account_privacy', id=current_user.id)}}" method="POST">
+        <form action="{{url_for('users.update_account_privacy', id=current_user.id)}}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <input type="checkbox" name="account_privacy" class=" custom-control-input" id="customSwitch1">
             <label class="custom-control-label" for="customSwitch1">Private account</label>

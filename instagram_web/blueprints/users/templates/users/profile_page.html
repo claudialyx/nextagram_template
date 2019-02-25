@@ -13,10 +13,10 @@ Profile Page
 <div class="d-flex justify-content-center align-items-center flex-wrap my-3">
     <div class="w-75 d-flex flex-row justify-content-around p-3">
         <div class="col-3 d-flex justify-content-end">
-            <img src="{{user[0].profile_image_url}}" width="200" height="200" class="rounded-circle" />
+            <img src="{{user.profile_image_url}}" width="200" height="200" class="rounded-circle" />
         </div>
         <div class="col-5 d-flex flex-column">
-            <h3 class="d-flex ">{{user[0].username}}</h3>
+            <h3 class="d-flex ">{{user.username}}</h3>
             <div class="d-flex flex-row justify-content-around">
                 <label>xxxxx posts</label>
                 <label>xxxxx followers</label>
@@ -60,7 +60,7 @@ Profile Page
     <div class="w-75 d-flex flex-column justify-content-around">
         <p class="d-flex justify-content-center px-3 py-1 font-weight-bold"># POSTS</p>
         <div class="d-flex flex-row justify-content-center flex-wrap">
-            {% for image in user[0].images %}
+            {% for image in user.images %}
             <img class="m-3" src="{{image.show_gallery_image}}" width="250" height="250" />
             {% endfor %}
         </div>

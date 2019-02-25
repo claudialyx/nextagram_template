@@ -12,5 +12,15 @@ Home
 {% endwith %}
 <div class="mx-3">
     <h1>Homepage</h1>
+    {% for user in users %}
+    <div class="d-flex flex-column">
+        <p>{{user.username}}</p>
+        <div class="d-flex flex-row">
+            {% for image in user.images %}
+            <img class="m-3" src="{{image.show_gallery_image}}" width="200" height="200" />
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

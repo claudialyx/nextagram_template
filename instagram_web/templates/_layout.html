@@ -36,7 +36,8 @@
 
     <div>
       <ul class="navbar-nav">
-        <form class="form-inline my-2 my-lg-0" method="POST">
+        <form class="form-inline my-2 my-lg-0" action="{{url_for('users.search')}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <input class="form-control mr-sm-2 form-control-sm" type="search" name="search_user"
             placeholder="Type Username">
           <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
