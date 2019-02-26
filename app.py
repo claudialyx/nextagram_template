@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from models.base_model import *
 from flask_login import LoginManager, current_user,login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import braintree
 
 web_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'instagram_web')
@@ -17,6 +18,16 @@ if os.getenv('FLASK_ENV') == 'production':
     app.config.from_object("config.ProductionConfig")
 else:
     app.config.from_object("config.DevelopmentConfig")
+
+gateway = braintree.BraintreeGateway(
+    braintree.Configuration(
+        braintree.Environment.Sandbox,
+        # BT_ENVIRONMENT = os.environ.get("BT_ENVIRONMENT"),
+        merchant_id= os.environ.get("BT_MERCHANT_ID"),
+        public_key = os.environ.get("BT_PUBLIC_KEY"),
+        private_key = os.environ.get("BT_PRIVATE_KEY")
+    )
+)
 
 @app.before_request
 def before_request():
@@ -34,12 +45,4 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
-
-from models.user import User
-@app.route("/")
-def index():
-    # if 'user_id' in session:
-        # return redirect(url_for('index'))
-    users = User.select()
-    return render_template('home.html', users=users)
 

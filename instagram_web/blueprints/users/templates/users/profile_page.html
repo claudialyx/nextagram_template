@@ -18,7 +18,7 @@ Profile Page
         <div class="col-5 d-flex flex-column">
             <h3 class="d-flex ">{{user.username}}</h3>
             <div class="d-flex flex-row justify-content-around">
-                <label>xxxxx posts</label>
+                <label>{{post_count}} posts</label>
                 <label>xxxxx followers</label>
                 <label>xxxxx following</label>
             </div>
@@ -27,6 +27,7 @@ Profile Page
             </button>
             <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
+                <!-- MODAL_UPLOAD HERE -->
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -61,10 +62,14 @@ Profile Page
         <p class="d-flex justify-content-center px-3 py-1 font-weight-bold"># POSTS</p>
         <div class="d-flex flex-row justify-content-center flex-wrap">
             {% for image in user.images %}
-            <img class="m-3" src="{{image.show_gallery_image}}" width="250" height="250" />
+            <img class="m-3 position-relative" src="{{image.show_gallery_image}}" width="250" height="250" />
+            <div class="d-flex">
+                <a href="{{url_for('donations.new_checkout', id=image.id)}}"
+                    class="btn btn-sm btn-outline-light position-absolute" style="transform:translate(-150%, 720%)">
+                    donate
+                </a>
+            </div>
             {% endfor %}
         </div>
     </div>
-</div>
-</div>
-{% endblock %}
+</div> {% endblock %}

@@ -1,0 +1,102 @@
+{% extends "_layout.html" %}
+{% block title %}
+Payment
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert">{{message}}</div>
+{% endfor %}
+{% endwith %}
+<script src="https://js.braintreegateway.com/web/dropin/1.10.0/js/dropin.js"></script>
+
+<div class="mx-3">
+    <div class="wrapper">
+        <div class="checkout container">
+            <h5 class="modal-title">Your generosity is much appreciated</h5>
+
+            <form id="payment-form" action="{{url_for('donations.create_checkout', id=id)}}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <section>
+                    <div class="form-group">
+                        <label for="amount">How much would you like to donate?</label>
+                        <input class="form-control" type="tel" name="amount" min="1" placeholder="5" step="0.01">
+                    </div>
+
+                    <div class="bt-drop-in-wrapper">
+                        <div id="bt-dropin"></div>
+                    </div>
+                    <div id="dropin-container"></div>
+                    <button id="submit-button" class="button button--small button--green">Confirm</button>
+
+                </section>
+
+                <input type="hidden" id="nonce" name="payment_method_nonce" />
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    var form = document.querySelector('#payment-form');
+    var client_token = '{{ client_token }}';
+    braintree.dropin.create({
+        authorization: client_token,
+        container: '#bt-dropin',
+        /* paypal: {
+             flow: 'vault'
+         } */
+    }, function (createErr, instance) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            instance.requestPaymentMethod(function (err, payload) {
+                if (err) {
+                    console.log('Error', err);
+                    return;
+                }
+                // Add the nonce to the form and submit
+                document.querySelector('#nonce').value = payload.nonce;
+                form.submit();
+            });
+        });
+    });
+</script>
+<style>
+    .button {
+        cursor: pointer;
+        font-weight: 500;
+        left: 3px;
+        line-height: inherit;
+        position: relative;
+        text-decoration: none;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 3px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        display: inline-block;
+    }
+
+    .button--small {
+        padding: 10px 20px;
+        font-size: 0.875rem;
+    }
+
+    .button--green {
+        outline: none;
+        background-color: #64d18a;
+        border-color: #64d18a;
+        color: white;
+        transition: all 200ms ease;
+    }
+
+    .button--green:hover {
+        background-color: #8bdda8;
+        border-color: green;
+        color: green;
+    }
+</style>
+{% endblock %}

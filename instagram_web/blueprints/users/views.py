@@ -9,6 +9,7 @@ from models.user import *
 from flask_login import LoginManager, current_user,login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app 
+from peewee import fn
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -48,17 +49,26 @@ def create():
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
     user = User.get(User.username == username)
-    return render_template('profile_page.html', user=user)
+    # post_count = User.select(fn.Count(User.images.image_name)).where(User.id == user.id)
+    post_count = len(user.images)
+    return render_template('profile_page.html', user=user, post_count=post_count)
 
 @users_blueprint.route('/search', methods=["POST"])
 def search():
     search_user = request.form.get('search_user')
     user = User.get(User.username == search_user)
-    return redirect(url_for('users.show', username=user.username, user=user))
+    return redirect(url_for('users.show', username=user.username))
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
     return render_template('home.html')
+
+# @app.route("/")
+# def index():
+#     # if 'user_id' in session:
+#         # return redirect(url_for('index'))
+#     users = User.select()
+#     return render_template('home.html', users=users)
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 @login_required
