@@ -28,5 +28,11 @@
         </div>
         <button type="submit" class="btn btn-primary">Sign In</button>
     </form>
+    <br />
+    <p>OR</p>
+    <form action="{{url_for('sessions.login')}}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit" class="btn btn-danger">Sign In with Google</button>
+    </form>
 </div>
 {% endblock %}

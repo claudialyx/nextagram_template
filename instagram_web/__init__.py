@@ -6,6 +6,10 @@ from instagram_web.blueprints.images.views import images_blueprint
 from instagram_web.blueprints.donations.views import donations_blueprint
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
+import config
+from instagram_web.helpers.google_oauth import *
+
+oauth.init_app(app)
 
 assets = Environment(app)
 assets.register(bundles)

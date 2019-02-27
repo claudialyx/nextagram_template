@@ -29,6 +29,7 @@ gateway = braintree.BraintreeGateway(
     )
 )
 
+
 @app.before_request
 def before_request():
     db.connect()
