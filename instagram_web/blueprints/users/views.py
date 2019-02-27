@@ -10,6 +10,7 @@ from flask_login import LoginManager, current_user,login_user, login_required, l
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app 
 from peewee import fn
+from authlib.flask.client import OAuth
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -18,7 +19,7 @@ users_blueprint = Blueprint('users',
 @users_blueprint.route('/new', methods=['GET'])
 def new():
     if current_user.is_authenticated:
-        return render_template('home.html')
+        return redirect('/')
     return render_template('signup.html')
 
 
@@ -49,7 +50,6 @@ def create():
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
     user = User.get(User.username == username)
-    # post_count = User.select(fn.Count(User.images.image_name)).where(User.id == user.id)
     post_count = len(user.images)
     return render_template('profile_page.html', user=user, post_count=post_count)
 
@@ -62,13 +62,6 @@ def search():
 @users_blueprint.route('/', methods=["GET"])
 def index():
     return render_template('home.html')
-
-# @app.route("/")
-# def index():
-#     # if 'user_id' in session:
-#         # return redirect(url_for('index'))
-#     users = User.select()
-#     return render_template('home.html', users=users)
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 @login_required

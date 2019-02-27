@@ -3,6 +3,9 @@ import braintree
 from app import app, gateway
 from flask_login import current_user
 from models.donation import Donation
+from models.image import Image
+from models.user import User
+from helpers import email_notification
 
 
 donations_blueprint = Blueprint('donations',
@@ -36,6 +39,10 @@ def new_checkout(id):
 # Receive a payment method nonce from your client
 @donations_blueprint.route("/checkout/<id>", methods=["POST"])
 def create_checkout(id):
+    # receiver = Image.get(Image.id==id).user_id
+    # image_name = Image.get(Image.id==id).image_name
+    image = Image.get_by_id(id)
+    receiver = User.get_by_id(image.user_id)
     amount = request.form.get('amount')
     nonce_from_the_client = request.form["payment_method_nonce"]
     result = gateway.transaction.sale({
@@ -49,10 +56,11 @@ def create_checkout(id):
     if result.is_success and result.transaction:
         new_donation = Donation(amount=amount, image_id=id, donor_user_id=current_user.id)
         new_donation.save()
+        email_notification(amount=amount, receiver=receiver, image_name=image.image_name)
         return redirect(url_for('donations.show_checkout',transaction_id=result.transaction.id))
     else:
         for x in result.errors.deep_errors: flash('Error: %s: %s' % (x.code, x.message))
-        return redirect(url_for('donations.show_checkout',transaction_id=result.transaction.id))
+        return redirect(url_for('users.show', username=receiver.username))
 
 
 @donations_blueprint.route('/checkouts/<transaction_id>', methods=['GET'])
