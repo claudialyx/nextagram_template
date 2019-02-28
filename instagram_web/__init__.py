@@ -4,6 +4,7 @@ from instagram_web.blueprints.users.views import users_blueprint
 from instagram_web.blueprints.sessions.views import sessions_blueprint
 from instagram_web.blueprints.images.views import images_blueprint
 from instagram_web.blueprints.donations.views import donations_blueprint
+from flask_login import current_user
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 import config
@@ -23,12 +24,29 @@ app.register_blueprint(donations_blueprint, url_prefix="/donations")
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-from models.user import User
+# from models.user import User
+from models.follow import Follow
+#before
+# @app.route("/")
+# def index():
+# #     # if 'user_id' in session:
+# #         # return redirect(url_for('index'))
+#     users = User.select()
+#     return render_template('users/home.html', users=users)
+
 @app.route("/")
 def index():
 #     # if 'user_id' in session:
 #         # return redirect(url_for('index'))
-    users = User.select()
-    return render_template('home.html', users=users)
-    # return render_template('home.html')
+    # user_followings = User.get(Follow.follower_user_id==current_user.id)
+    # user_followings = User.select().join(Follow, on=(Follow.follower_user_id == current_user.id))
+    user_followings = Follow.select(Follow.followed_user_id).where(Follow.follower_user_id == current_user.id)
 
+    return render_template('users/home.html', user_followings=user_followings)
+
+
+# to obtain all users we are following:
+# User.follows.followed_user_id
+
+# to obtain all images of a particular user:
+# User.images.image_name

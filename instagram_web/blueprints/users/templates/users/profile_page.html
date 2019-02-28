@@ -29,8 +29,15 @@ Profile Page
             {% else %}
             <form action="{{url_for('users.update_follow', id=user.id)}}" id="follow_form" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <input type="checkbox" id="follow" name="follow" class=" btn btn-sm btn-outline-dark w-25"> follow
-
+                <div class="custom-control custom-checkbox mb-3">
+                    {% if already_followed %}
+                    <input type="checkbox" id="follow" name="follow" class="custom-control-input" checked>
+                    <label class=" custom-control-label" for="follow">Followed</label>
+                    {% else %}
+                    <input type="checkbox" id="follow" name="follow" class="custom-control-input">
+                    <label class=" custom-control-label" for="follow">Follow</label>
+                    {% endif %}
+                </div>
             </form>
             {% endif %}
 

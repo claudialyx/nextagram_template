@@ -12,11 +12,11 @@ Home
 {% endwith %}
 <div class="mx-3">
     <h1>Homepage</h1>
-    {% for user in users %}
+    {% for user in user_followings %}
     <div class="d-flex flex-column">
-        <p>{{user.username}}</p>
+        <p>{{user.followed_user_id.username}}</p>
         <div class="d-flex flex-row">
-            {% for image in user.images %}
+            {% for image in user.followed_user_id.images %}
             <img class="m-3" src="{{image.show_gallery_image}}" width="200" height="200" />
             {% endfor %}
         </div>
