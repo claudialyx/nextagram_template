@@ -118,3 +118,21 @@ def update(id):
         else:
             return render_template('edit_profile.html')
     return render_template('edit_profile.html')
+
+# @users_blueprint.route('/<id>/edit/follow', methods=['GET'])
+# @login_required
+# def edit_follow(id): 
+#     return render_template('profile_page.html')
+
+@users_blueprint.route('/follow/<id>', methods=['POST'])
+@login_required
+def update_follow(id):
+    user = User.get_by_id(id)
+    # breakpoint()
+    if request.form.get('follow'):
+        # breakpoint()
+        # user= User.get(id=id)
+        # new_privacy = not user.privacy_status
+        # a = User.update(privacy_status = new_privacy ).where(User.id == current_user.id).execute()
+        flash("FOLLOWED")
+    return redirect(url_for('users.show', username=user.username))

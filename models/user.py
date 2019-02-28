@@ -27,3 +27,5 @@ class User(BaseModel, UserMixin):
             return "/static/images/placeholder.png"
         else:
             return app.config['S3_DOMAIN'] + self.profile_image_name    
+
+    
