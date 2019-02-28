@@ -77,10 +77,11 @@ def edit_account_privacy(id):
 @login_required
 def update_account_privacy(id): 
     if request.form.get('account_privacy'):
-        a = User.update(privacy_status = True).where(User.id == current_user.id)
-        a.execute()
+        user= User.get(id=id)
+        new_privacy = not user.privacy_status
+        a = User.update(privacy_status = new_privacy ).where(User.id == current_user.id).execute()
         flash("Account privacy status updated")
-    return render_template('account_privacy.html')
+    return redirect(url_for('users.edit_account_privacy',id=current_user.id))
 
 @users_blueprint.route('/<id>', methods=['POST'])
 @login_required

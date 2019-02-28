@@ -77,3 +77,4 @@ def authorize():
         return render_template('signin.html')
     return redirect(url_for('sessions.sign_in'))
 
+ 
