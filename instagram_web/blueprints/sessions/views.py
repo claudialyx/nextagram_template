@@ -22,12 +22,12 @@ def load_user(user_id):
     
 @sessions_blueprint.route("/user")
 def index_user():
-    return render_template('signin.html')
+    return render_template('users/signin.html')
 
 @sessions_blueprint.route("/user/sign_in", methods=['GET','POST'])
 def sign_in():
     if current_user.is_authenticated:
-        return render_template('home.html')
+        return render_template('users/home.html')
     if request.method == "POST":
         username_to_check = request.form['username_in']
         password_to_check = request.form['password_in']
@@ -43,11 +43,11 @@ def sign_in():
                 return redirect(url_for('index'))
             else: 
                 flash("Please ensure username and password are correct")
-                return render_template('signin.html')
+                return render_template('users/signin.html')
         else: 
             flash("Please ensure username and password are correct")
-            return render_template('signin.html')
-    return render_template('signin.html')
+            return render_template('users/signin.html')
+    return render_template('users/signin.html')
 
 @sessions_blueprint.route("/user/sign_out")
 @login_required
@@ -74,7 +74,7 @@ def authorize():
         return redirect(url_for('index'))
     else: 
         flash("You do not have a google account with us. Please proceed to sign up")
-        return render_template('signin.html')
+        return render_template('users/signin.html')
     return redirect(url_for('sessions.sign_in'))
 
  

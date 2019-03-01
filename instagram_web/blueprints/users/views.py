@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template
 from flask_wtf.csrf import CSRFProtect
 import os
 import re
 import config
-from flask import Flask, render_template, request, redirect, url_for, flash, session,escape
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, session,escape
 from models.base_model import *
 from models.user import *
 from models.follow import *
@@ -50,8 +49,8 @@ def create():
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
     user = User.get_or_none(User.username == username)
-    already_followed = Follow.get_or_none(Follow.follower_user_id == current_user.id, Follow.followed_user_id==user.id)
     post_count = len(user.images)
+    already_followed = Follow.get_or_none(Follow.follower_user_id == current_user.id, Follow.followed_user_id==user.id)
     return render_template('users/profile_page.html', user=user, post_count=post_count, already_followed=already_followed)
 
 @users_blueprint.route('/search', methods=["POST"])
@@ -125,21 +124,3 @@ def update(id):
             return render_template('users/edit_profile.html')
     return render_template('users/edit_profile.html')
 
-# @users_blueprint.route('/<id>/edit/follow', methods=['GET'])
-# @login_required
-# def edit_follow(id): 
-#     return render_template('profile_page.html')
-
-
-@users_blueprint.route('/follow/<id>', methods=['GET','POST'])
-@login_required
-def update_follow(id):
-    user = User.get_by_id(id)
-    if request.method == "POST":
-        if request.form.get('follow'):
-            a = Follow(follower_user_id = current_user.id, followed_user_id= user.id)
-            a.save()
-        else:
-            b = Follow.delete().where(Follow.follower_user_id == current_user.id and Follow.followed_user_id == user.id)
-            b.execute()
-    return redirect(url_for('users.show', username=user.username))

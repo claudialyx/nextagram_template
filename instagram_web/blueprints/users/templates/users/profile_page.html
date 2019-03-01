@@ -27,11 +27,13 @@ Profile Page
                 data-target="#modal_upload"> + post
             </button>
             {% else %}
-            <form action="{{url_for('users.update_follow', id=user.id)}}" id="follow_form" method="POST">
+            <form action="{{url_for('follows.create_follow', id=user.id)}}" id="follow_form" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="custom-control custom-checkbox mb-3">
-                    {% if already_followed %}
-                    <input type="checkbox" id="follow" name="follow" class="custom-control-input" checked>
+                    {% if already_followed.approved_status == False %}
+                    <label>Pending follow request</label>
+                    {% elif already_followed.approved_status == True %}
+                    <input type=" checkbox" id="follow" name="follow" class="custom-control-input" checked>
                     <label class=" custom-control-label" for="follow">Followed</label>
                     {% else %}
                     <input type="checkbox" id="follow" name="follow" class="custom-control-input">
@@ -75,6 +77,7 @@ Profile Page
             </div>
         </div>
     </div>
+    {% if (already_followed.approved_status) or (user.id == current_user.id) or (user.privacy_status == false)%}
     <div class="w-75 d-flex flex-column justify-content-around">
         <p class="d-flex justify-content-center px-3 py-1 font-weight-bold"># POSTS</p>
         <div class="d-flex flex-row justify-content-center flex-wrap">
@@ -89,6 +92,12 @@ Profile Page
             {% endfor %}
         </div>
     </div>
+    {% else %}
+    <div class="w-75 d-flex flex-column align-items-center">
+        <p>This account is private</p><br />
+        <p>Follow this account to see their posts </p>
+    </div>
+    {% endif %}
     <script>
         var checkBox = document.querySelector('#follow');
         var form = document.querySelector('#follow_form');

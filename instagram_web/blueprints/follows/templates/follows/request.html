@@ -1,0 +1,43 @@
+{% extends "_layout.html" %}
+{% block title %}
+Follow requests
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert">{{message}}</div>
+{% endfor %}
+{% endwith %}
+<div class="mx-3 d-flex flex-column">
+    {% if requests %}
+    {% for request in requests %}
+    <p>{{request.follower_user_id.username}}</p>
+    <form action="{{url_for('follows.update_follow_requests', id=request.follower_user_id)}}" method="POST"
+        id="request_form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit" id="approve" class="btn btn-primary btn-sm" style="max-width:80px">Approve</button>
+    </form>
+    <form action="{{url_for('follows.destroy_follow_requests', id=request.follower_user_id)}}" method="POST"
+        id="request_form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit" id="reject" class="btn btn-primary btn-sm" style="max-width:80px">Reject</button>
+    </form>
+    {% endfor %}
+    {% else %}
+    <p>No follower requests</p>
+    {% endif %}
+</div>
+<script>
+    var approve_button = document.querySelector('#approve');
+    var reject_button = document.querySelector('#reject');
+    var form = document.querySelector('#request_form');
+    approve_button.addEventListener('change', function (event) {
+        form.submit()
+    })
+    reject_button.addEventListener('change', function (event) {
+        form.submit()
+    })
+</script>
+{% endblock %}

@@ -47,11 +47,18 @@
     <div>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         {% if current_user.is_authenticated %}
+        <!-- To user's profile page -->
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('users.show', username=current_user.username)}}"><img
               src="/static/images/user.png" width="32" height="32"
               class="d-inline-block align-center" />{{current_user.username}} </a>
         </li>
+        <!-- Follow request -->
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('follows.show_follow_requests')}}"><img src="/static/images/follow.png"
+              width="36" height="36" class="d-inline-block align-center" /></a>
+        </li>
+        <!-- Settings dropdown -->
         <li class="dropdown">
           <a class="dropdown-toggle nav-link" data-toggle="dropdown"><img src="/static/images/settings.png" width="28"
               height="28" class="d-inline-block align-top" />Settings</a>

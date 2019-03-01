@@ -12,6 +12,7 @@ Home
 {% endwith %}
 <div class="mx-3">
     <h1>Homepage</h1>
+    {% if current_user.is_authenticated %}
     {% for user in user_followings %}
     <div class="d-flex flex-column">
         <p>{{user.followed_user_id.username}}</p>
@@ -22,5 +23,8 @@ Home
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <p>Proceed to sign up</p>
+    {% endif%}
 </div>
 {% endblock %}
