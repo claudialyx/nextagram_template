@@ -27,12 +27,17 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 from models.follow import Follow
+from models.image import Image
+# from models.user import User
 @app.route("/")
 def index():
 #     # if 'user_id' in session:
 #         # return redirect(url_for('index'))
     if current_user.is_authenticated:
-        user_followings = Follow.select(Follow.followed_user_id).where(Follow.follower_user_id == current_user.id, Follow.approved_status == True)
-        return render_template('users/home.html', user_followings=user_followings)
+        user_followings = Follow.select().where(Follow.follower_user_id == current_user.id, Follow.approved_status == True)
+        followings_id = list(follow.followed_user_id for follow in user_followings)
+        user_followings_images = Image.select().where(Image.user_id << followings_id).order_by(Image.created_at.desc())
+        # breakpoint()
+        return render_template('users/home.html', user_followings_images=user_followings_images)
     else:
         return render_template('users/home.html')

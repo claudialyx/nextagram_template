@@ -50,8 +50,10 @@ def create():
 def show(username):
     user = User.get_or_none(User.username == username)
     post_count = len(user.images)
+    follower_count = len(user.follower)
+    followed_count = len(user.followed)
     already_followed = Follow.get_or_none(Follow.follower_user_id == current_user.id, Follow.followed_user_id==user.id)
-    return render_template('users/profile_page.html', user=user, post_count=post_count, already_followed=already_followed)
+    return render_template('users/profile_page.html', user=user, post_count=post_count, follower_count= follower_count, followed_count=followed_count, already_followed=already_followed)
 
 @users_blueprint.route('/search', methods=["POST"])
 def search():

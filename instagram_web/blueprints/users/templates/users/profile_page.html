@@ -19,28 +19,38 @@ Profile Page
             <h3 class="d-flex ">{{user.username}}</h3>
             <div class="d-flex flex-row justify-content-around">
                 <label>{{post_count}} posts</label>
-                <label>xxxxx followers</label>
-                <label>xxxxx following</label>
+                <label>{{follower_count}} followers</label>
+                <label>{{followed_count}} followings</label>
             </div>
             {% if current_user.id == user.id %}
             <button type="button" class=" btn btn-sm btn-outline-dark w-25" data-toggle="modal"
                 data-target="#modal_upload"> + post
             </button>
+
+            {% else %}
+            {% if already_followed.approved_status == False %}
+            <div>
+                <button type="button" id="follow" class="btn btn-sm btn-outline-dark" disabled>Pending follow
+                    request</button>
+            </div>
+
+            {% elif already_followed.approved_status == True %}
+            <form action="{{url_for('follows.destroy_follow', id=user.id)}}" id="follow_form" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <div>
+                    <button type="button" id="follow" class=" btn btn-sm btn-outline-dark w-25"
+                        for="follow">Unfollow</button>
+                </div>
+            </form>
             {% else %}
             <form action="{{url_for('follows.create_follow', id=user.id)}}" id="follow_form" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <div class="custom-control custom-checkbox mb-3">
-                    {% if already_followed.approved_status == False %}
-                    <label>Pending follow request</label>
-                    {% elif already_followed.approved_status == True %}
-                    <input type=" checkbox" id="follow" name="follow" class="custom-control-input" checked>
-                    <label class=" custom-control-label" for="follow">Followed</label>
-                    {% else %}
-                    <input type="checkbox" id="follow" name="follow" class="custom-control-input">
-                    <label class=" custom-control-label" for="follow">Follow</label>
-                    {% endif %}
+                <div>
+                    <button type="button" id="follow" class=" btn btn-sm btn-outline-dark w-25"
+                        for="follow">Follow</button>
                 </div>
             </form>
+            {% endif %}
             {% endif %}
 
 
@@ -82,16 +92,37 @@ Profile Page
         <p class="d-flex justify-content-center px-3 py-1 font-weight-bold"># POSTS</p>
         <div class="d-flex flex-row justify-content-center flex-wrap">
             {% for image in user.images %}
-            <img class="m-3 position-relative" src="{{image.show_gallery_image}}" width="250" height="250" />
-            <div class="d-flex">
-                <a href="{{url_for('donations.new_checkout', id=image.id)}}"
-                    class="btn btn-sm btn-outline-light position-absolute" style="transform:translate(-150%, 720%)">
-                    donate
-                </a>
-            </div>
+            <a href="#" data-toggle="modal" data-target="#myModal{{image.id}}"><img class="m-3 position-relative"
+                    src="{{image.show_gallery_image}}" id="image" width=" 250" height="250" /></a>
             {% endfor %}
         </div>
     </div>
+
+    <!-- Large modal -->
+    <!-- <div class="image-set"> -->
+    {% for image in user.images %}
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal{{image.id}}"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content d-flex flex-wrap max-width:800px" style="box-sizing:border-box; overflow:hidden">
+                <div>
+                    <img class="m-3 d-flex" src="{{image.show_gallery_image}}"
+                        data-lightbox="{{image.show_gallery_image}}" id="image" style="max-width:780px" />
+                    </a>
+                    <div class="modal-footer p-4 d-flex">
+                        <a href="{{url_for('donations.new_checkout', id=image.id)}}"
+                            class="btn btn-sm btn-outline-danger position-absolute" style="transform:translate(0%, 0%)">
+                            donate
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- </div> -->
+    <!-- ends here -->
+
     {% else %}
     <div class="w-75 d-flex flex-column align-items-center">
         <p>This account is private</p><br />
@@ -99,10 +130,15 @@ Profile Page
     </div>
     {% endif %}
     <script>
-        var checkBox = document.querySelector('#follow');
+        var button = document.querySelector('#follow');
         var form = document.querySelector('#follow_form');
-        checkBox.addEventListener('change', function (event) {
+        var image = document.querySelector('#image');
+        button.addEventListener('click', function (event) {
             form.submit()
         })
+        function onImageClick() {
+            $('#myModal').modal()
+        }
+
     </script>
 </div> {% endblock %}

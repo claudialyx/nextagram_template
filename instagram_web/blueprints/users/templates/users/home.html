@@ -10,16 +10,26 @@ Home
 <div class="alert alert-success" role="alert">{{message}}</div>
 {% endfor %}
 {% endwith %}
-<div class="mx-3">
+<div class="mx-3 d-flex flex-column">
     <h1>Homepage</h1>
     {% if current_user.is_authenticated %}
-    {% for user in user_followings %}
-    <div class="d-flex flex-column">
-        <p>{{user.followed_user_id.username}}</p>
-        <div class="d-flex flex-row">
-            {% for image in user.followed_user_id.images %}
-            <img class="m-3" src="{{image.show_gallery_image}}" width="200" height="200" />
-            {% endfor %}
+    {% for image in user_followings_images %}
+    <div class="d-flex flex-column align-items-center">
+        <div class="card mb-3" style="max-width:550px">
+            <div class="card-header">
+                <a style="text-decoration:none; color:black;"
+                    href="{{url_for('users.show', username=image.user_id.username)}}">
+                    <img src="{{image.user_id.profile_image_url}}" width="45" height="45" class="rounded-circle">
+                    {{image.user_id.username}}
+                </a>
+            </div>
+            <img src="{{image.show_gallery_image}}" style="max-height:500px; width:100%" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                    content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">{{image.created_at}}</small></p>
+            </div>
         </div>
     </div>
     {% endfor %}

@@ -10,20 +10,39 @@ Follow requests
 <div class="alert alert-success" role="alert">{{message}}</div>
 {% endfor %}
 {% endwith %}
-<div class="mx-3 d-flex flex-column">
-    {% if requests %}
-    {% for request in requests %}
-    <p>{{request.follower_user_id.username}}</p>
-    <form action="{{url_for('follows.update_follow_requests', id=request.follower_user_id)}}" method="POST"
-        id="request_form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" id="approve" class="btn btn-primary btn-sm" style="max-width:80px">Approve</button>
-    </form>
-    <form action="{{url_for('follows.destroy_follow_requests', id=request.follower_user_id)}}" method="POST"
-        id="request_form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" id="reject" class="btn btn-primary btn-sm" style="max-width:80px">Reject</button>
-    </form>
+<div class="m-3">
+    <h3>Follow requests</h3>
+    <div class="d-flex flex-row">
+        {% if requests %}
+        {% for request in requests %}
+        <div class="d-flex flex-row">
+            <div class="card" style="width: 18rem; margin:3px">
+                <img class="m-3" src="{{request.follower_user_id.profile_image_url}}" height="150" class="card-img-top"
+                    alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{request.follower_user_id.username}}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's
+                        content.</p>
+                    <div class="d-flex flex-row align-items-space-between">
+                        <form action="{{url_for('follows.update_follow_requests', id=request.follower_user_id)}}"
+                            method="POST" id="request_form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            <button type="submit" id="approve" class="btn btn-primary btn-sm d-flex"
+                                style="max-width:80px">Approve</button>
+                        </form>
+                        <form action="{{url_for('follows.destroy_follow_requests', id=request.follower_user_id)}}"
+                            method="POST" id="request_form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            <button type="submit" id="reject" class="btn btn-primary btn-sm d-flex"
+                                style="max-width:80px">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% endfor %}
     {% else %}
     <p>No follower requests</p>
