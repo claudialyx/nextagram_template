@@ -1,5 +1,8 @@
 # Flask Nextagram Template
 
+Preview: 
+![](Capture.PNG)
+
 version 0.0.1 (alpha)
 
 ## Development
